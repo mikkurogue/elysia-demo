@@ -1,7 +1,6 @@
 import { t } from "elysia";
 
 export namespace UserModel {
-	/// DTO for elysia validation
 	export const signInBody = t.Object({
 		username: t.String(),
 		password: t.String(),
@@ -18,4 +17,26 @@ export namespace UserModel {
 
 	export const signInInvalid = t.Literal("Invalid username or password");
 	export type signInInvalid = typeof signInInvalid.static;
+
+	export const signUpBody = t.Object({
+		username: t.String({ minLength: 3 }),
+		password: t.String({ minLength: 8 }),
+		email: t.String({ format: "email" }),
+	});
+
+	export type signUpBody = typeof signUpBody.static;
+
+	export const signUpResponse = t.Object({
+		username: t.String(),
+		email: t.String(),
+	});
+
+	export type signUpResponse = typeof signUpResponse.static;
+
+	export const signUpInvalid = t.Union([
+		t.Literal("Username already exists"),
+		t.Literal("Email already exists"),
+	]);
+
+	export type signUpInvalid = typeof signUpInvalid.static;
 }

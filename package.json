@@ -3,14 +3,27 @@
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@paralleldrive/cuid2": "^3.0.4",
+    "drizzle-orm": "^0.44.7",
+    "drizzle-typebox": "^0.3.3",
     "elysia": "latest",
-    "neverthrow": "^8.2.0"
+    "neverthrow": "^8.2.0",
+    "postgres": "^3.4.7"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "bun-types": "latest",
+    "drizzle-kit": "^0.31.7",
+    "oxlint": "^1.30.0"
+  },
+  "overrides": {
+    "@sinclair/typebox": "0.32.4"
   },
   "module": "src/index.js"
 }
