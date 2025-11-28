@@ -1,18 +1,11 @@
 import { Elysia } from "elysia";
-import { UserService } from "./modules/user/service";
+import { user } from "./modules/user";
 
 const app = new Elysia()
 	.get("/", function () {
-		"Hello Elysia";
+		return "Hello Elysia";
 	})
-	.post("/user", async function () {
-		const res = await UserService.signIn({
-			username: "test1",
-			password: "password",
-		});
-
-		return res;
-	})
+	.use(user)
 	.listen(3000);
 
 console.log(

@@ -3,8 +3,8 @@ import { Elysia } from "elysia";
 import { UserModel } from "./model";
 import { UserService } from "./service";
 
-export const user = new Elysia({ prefix: "/user" }).get(
-	"/sign-isn",
+export const user = new Elysia({ prefix: "/user" }).post(
+	"/sign-in",
 	async function ({ body, cookie: { session } }) {
 		const response = await UserService.signIn(body);
 
