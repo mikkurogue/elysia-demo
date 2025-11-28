@@ -1,6 +1,6 @@
-import { defineConfig } from "drizzle-kit";
+import type { Config } from "drizzle-kit";
 
-export default defineConfig({
+export default {
 	schema: "./src/database/schema.ts",
 	out: "./drizzle",
 	dialect: "postgresql",
@@ -11,4 +11,4 @@ export default defineConfig({
 		password: process.env.DB_PASSWORD || "postgres",
 		database: process.env.DB_NAME || "elysiadb",
 	},
-});
+} satisfies Config;

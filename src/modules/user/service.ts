@@ -1,47 +1,53 @@
-import { eq } from "drizzle-orm";
 import { status } from "elysia";
 import { fromPromise } from "neverthrow";
+import { eq } from "drizzle-orm";
 
 import type { UserModel } from "./model";
 import { db } from "../../database/db";
-import { table } from "../../database/schema";
+import { users } from "../../database/schema";
 
 export abstract class UserService {
 	static async signIn({ username, password }: UserModel.signInBody) {
-		const user = await db.query.user.findFirst({
-			where: eq(table.user.username, username),
-		});
+		const [foundUser] = await db
+			.select()
+			.from(users)
+			.where(eq(users.username, username))
+			.limit(1);
 
-		if (!user) {
+		if (!foundUser) {
 			throw status(400, "Invalid username or password");
 		}
 
-		const isValid = await Bun.password.verify(password, user.password);
+		const isValid = await Bun.password.verify(password, foundUser.password);
 
 		if (!isValid) {
 			throw status(400, "Invalid username or password");
 		}
 
 		return {
-			username: user.username,
+			username: foundUser.username,
 			token: "Some-generated-token",
 		};
 	}
 
 	static async signUp({ username, password, email }: UserModel.signUpBody) {
 		// Check if username already exists
-		const existingUser = await db.query.user.findFirst({
-			where: eq(table.user.username, username),
-		});
+		const [existingUser] = await db
+			.select()
+			.from(users)
+			.where(eq(users.username, username))
+			.limit(1);
 
 		if (existingUser) {
 			throw status(400, "Username already taken");
 		}
 
 		// Check if email already exists
-		const existingEmail = await db.query.user.findFirst({
-			where: eq(table.user.email, email),
-		});
+		const [existingEmail] = await db
+			.select()
+			.from(users)
+			.where(eq(users.email, email))
+			.limit(1);
 
 		if (existingEmail) {
 			throw status(400, "Email already in use");
@@ -51,7 +57,7 @@ export abstract class UserService {
 
 		const result = await fromPromise(
 			db
-				.insert(table.user)
+				.insert(users)
 				.values({
 					username,
 					email,

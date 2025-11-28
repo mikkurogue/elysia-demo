@@ -1,15 +1,16 @@
-import { pgTable, varchar, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
 import { createId } from "@paralleldrive/cuid2";
 
-export const user = pgTable("user", {
-	id: varchar("id")
-		.$defaultFn(() => createId())
-		.primaryKey(),
-	username: varchar("username").notNull().unique(),
-	password: varchar("password").notNull(),
-	email: varchar("email").notNull().unique(),
-	createdAt: timestamp("created_at").defaultNow().notNull(),
+export const users = pgTable("users", {
+	id: varchar("id", { length: 128 })
+		.primaryKey()
+		.$defaultFn(() => createId()),
+	username: varchar("username", { length: 255 }).notNull().unique(),
+	email: varchar("email", { length: 255 }).notNull().unique(),
+	password: text("password").notNull(),
+	createdAt: timestamp("created_at").notNull().defaultNow(),
+	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-export const table = { user } as const;
-export type Table = typeof table;
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
